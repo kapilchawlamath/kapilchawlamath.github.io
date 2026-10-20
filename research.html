@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Research — Kapil Chawla</title>
+<meta name="description" content="Research profile of Kapil Chawla, Florida State University: neural operators, reduced-order models, mesh-free methods, hybrid quantum-classical solvers, and ice-sheet modeling.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:,">
+</head>
+<body>
+<style>
+/* Layout: one reading column (920px) — header, keyword strip, theme index of image cards,
+   then one band per research theme; figures sit on white "plates" in both themes. */
+:root{
+  --garnet:#782f40; --garnet-dark:#5c2331; --gold:#a8823f;
+  --ink:#1c1a19; --ink-soft:#4f4945; --paper:#fbf9f6; --raised:#ffffff;
+  --line:#e7e0d8; --tag-bg:#f3ece2; --tag-text:#6b4a2b; --plate:#ffffff;
+  --ok-bg:#e4f0e6; --ok-fg:#25603a; --info-bg:#e3ebf5; --info-fg:#24497a;
+  --warn-bg:#f8ecd6; --warn-fg:#7a5310; --mute-bg:#eeeae5; --mute-fg:#5a524c;
+  --ice:#cfe3f1; --ice-line:#3c6e95; --rock:#b9a894; --rock-line:#7b6a57;
+  --serif:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --sans:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --radius:14px; --maxw:920px;
+  --shadow:0 1px 2px rgba(28,26,25,.04), 0 8px 24px rgba(28,26,25,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --garnet:#d98a9a; --garnet-dark:#f0aebc; --gold:#d9b877;
+    --ink:#f1ece6; --ink-soft:#c9c0b6; --paper:#16130f; --raised:#201b16;
+    --line:#352b21; --tag-bg:#2a2119; --tag-text:#e3c99a; --plate:#f4f1ec;
+    --ok-bg:#1d3324; --ok-fg:#9fd6ad; --info-bg:#1b2a3d; --info-fg:#a9c7ee;
+    --warn-bg:#3a2d14; --warn-fg:#f0cd8a; --mute-bg:#2a241e; --mute-fg:#c9c0b6;
+    --ice:#2b4a63; --ice-line:#9cc8ea; --rock:#5a4c3e; --rock-line:#a8957f;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --garnet:#d98a9a; --garnet-dark:#f0aebc; --gold:#d9b877;
+  --ink:#f1ece6; --ink-soft:#c9c0b6; --paper:#16130f; --raised:#201b16;
+  --line:#352b21; --tag-bg:#2a2119; --tag-text:#e3c99a; --plate:#f4f1ec;
+  --ok-bg:#1d3324; --ok-fg:#9fd6ad; --info-bg:#1b2a3d; --info-fg:#a9c7ee;
+  --warn-bg:#3a2d14; --warn-fg:#f0cd8a; --mute-bg:#2a241e; --mute-fg:#c9c0b6;
+  --ice:#2b4a63; --ice-line:#9cc8ea; --rock:#5a4c3e; --rock-line:#a8957f;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.65;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--paper)}
+h1,h2,h3{font-family:var(--serif);color:var(--ink);line-height:1.22;margin:0;text-wrap:balance}
+a{color:var(--garnet);text-decoration:none}
+a:hover{text-decoration:underline}
+a:focus-visible,button:focus-visible,input:focus-visible,.fig-btn:focus-visible{outline:2px solid var(--garnet);outline-offset:3px;border-radius:6px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px))}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb, var(--paper) 90%, transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:58px;max-width:1080px}
+.nav-name{font-family:var(--serif);font-weight:600;font-size:1.05rem;color:var(--ink);white-space:nowrap}
+.nav-links{display:flex;gap:20px;list-style:none;margin:0;padding:0;align-items:center}
+.nav-links a{color:var(--ink-soft);font-size:.9rem;font-weight:500}
+.nav-links a:hover{color:var(--garnet);text-decoration:none}
+.theme-toggle{border:1px solid var(--line);background:var(--raised);color:var(--ink-soft);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
+@media (max-width:760px){.nav-links li.opt{display:none}}
+
+/* header */
+.hero{padding-block:48px 28px}
+.hero-row{display:flex;align-items:center;gap:26px;flex-wrap:wrap}
+.avatar{flex:none;width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--raised);box-shadow:var(--shadow)}
+.hero-text{min-width:0;flex:1 1 320px}
+.hero h1{font-size:clamp(1.8rem,4vw,2.3rem);margin-bottom:6px}
+.hero .role{color:var(--ink);font-size:1.02rem;margin:0}
+.hero .affil{color:var(--ink-soft);font-size:.96rem;margin:2px 0 0}
+.hero .grant{color:var(--ink-soft);font-size:.86rem;margin:8px 0 0}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--raised);color:var(--ink);padding:6px 14px;border-radius:999px;font-size:.86rem;font-weight:500}
+.chip:hover{border-color:var(--garnet);color:var(--garnet);text-decoration:none}
+
+.eyebrow{text-transform:uppercase;letter-spacing:.09em;font-size:.72rem;font-weight:700;color:var(--gold);margin:0 0 8px}
+.keywords{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.kw{background:var(--tag-bg);color:var(--tag-text);font-size:.82rem;font-weight:600;padding:5px 11px;border-radius:8px}
+.statement{max-width:68ch;color:var(--ink-soft);margin:22px 0 0}
+.statement strong{color:var(--ink);font-weight:600}
+
+/* theme index */
+.index{padding-block:30px 46px}
+.index-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+@media (max-width:680px){.index-grid{grid-template-columns:1fr}}
+.index-card{display:flex;flex-direction:column;background:var(--raised);border:1px solid var(--line);border-radius:14px;overflow:hidden;color:var(--ink);transition:border-color .15s, transform .15s}
+.index-card:hover{border-color:var(--garnet);text-decoration:none;transform:translateY(-2px)}
+@media (prefers-reduced-motion: reduce){.index-card{transition:none}.index-card:hover{transform:none}}
+.thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}
+.thumbs img{aspect-ratio:4/3;width:100%;max-width:100%;object-fit:cover;background:var(--plate);display:block}
+.index-card .ic-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px}
+.index-card .ic-num{font-size:.72rem;font-weight:700;letter-spacing:.06em;color:var(--gold);text-transform:uppercase}
+.index-card .ic-title{font-family:var(--serif);font-weight:600;font-size:1.25rem;line-height:1.25}
+.ic-list{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:8px}
+.ic-list li{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 10px;font-size:.9rem;color:var(--ink-soft);padding-top:8px;border-top:1px dashed var(--line)}
+
+/* theme sections */
+.theme{border-top:2px solid var(--line);padding-block:56px 24px;scroll-margin-top:70px}
+.theme-head h2{font-size:clamp(1.7rem,3.8vw,2.2rem);margin-bottom:10px}
+.theme-head p{max-width:68ch;color:var(--ink-soft);margin:0}
+
+.subtheme{margin-top:44px;scroll-margin-top:70px}
+.sub-head h3{font-size:clamp(1.25rem,2.6vw,1.5rem);margin-bottom:8px;display:flex;align-items:baseline;gap:10px}
+.sub-num{font-family:var(--sans);font-size:.85rem;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums}
+.sub-head p{max-width:68ch;color:var(--ink-soft);margin:0}
+.sub-head + figure{margin-top:24px}
+.subtheme + .subtheme{padding-top:40px;border-top:1px solid var(--line)}
+.project{margin-top:28px;display:grid;gap:14px}
+.project + .project{padding-top:30px;border-top:1px dashed var(--line)}
+.p-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.p-head h4{font-family:var(--serif);font-size:1.14rem;line-height:1.25;margin:0;flex:1 1 100%;text-wrap:balance}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:.74rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:3px 10px;border-radius:999px}
+.status::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.s-ok{background:var(--ok-bg);color:var(--ok-fg)}
+.s-info{background:var(--info-bg);color:var(--info-fg)}
+.s-warn{background:var(--warn-bg);color:var(--warn-fg)}
+.s-mute{background:var(--mute-bg);color:var(--mute-fg)}
+.venue{font-size:.9rem;color:var(--ink);font-weight:600}
+.venue em{font-style:italic;font-weight:500}
+.authors{color:var(--ink-soft);font-size:.9rem;margin:-6px 0 0}
+.authors b{color:var(--ink);font-weight:600}
+.pitch{max-width:70ch;margin:0}
+.result{max-width:70ch;margin:0;padding:10px 14px;background:var(--tag-bg);border-radius:10px;color:var(--ink);font-size:.95rem}
+.result .lbl{font-weight:700;color:var(--tag-text);margin-right:6px;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a,.links span{font-size:.8rem;font-weight:700;border:1px solid var(--line);padding:4px 10px;border-radius:7px;color:var(--garnet);background:var(--raised)}
+.links a:hover{background:var(--tag-bg);text-decoration:none}
+.links span{color:var(--ink-soft);font-weight:600;border-style:dashed;background:transparent}
+.talks{font-size:.86rem;color:var(--ink-soft);margin:0}
+.talks b{color:var(--ink);font-weight:600}
+
+/* figures */
+figure{margin:0;min-width:0}
+.plate{background:var(--plate);border:1px solid var(--line);border-radius:12px;padding:10px;display:block;width:100%}
+.fig-btn{all:unset;display:block;cursor:zoom-in;width:100%}
+.plate img{display:block;width:100%;height:auto;max-width:100%}
+figcaption{font-size:.82rem;color:var(--ink-soft);margin-top:7px;line-height:1.5}
+figcaption b{color:var(--ink);font-weight:600}
+.figs-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+.figs-2 > *{min-width:0}
+@media (max-width:640px){.figs-2{grid-template-columns:1fr}}
+
+/* before/after slider */
+.compare{position:relative;background:var(--plate);border:1px solid var(--line);border-radius:12px;overflow:hidden;user-select:none;touch-action:pan-y}
+.compare img{display:block;width:100%;height:auto;max-width:100%}
+.compare .top{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--pos,50%)) 0 0)}
+.compare .bar{position:absolute;top:0;bottom:0;left:var(--pos,50%);width:2px;background:var(--garnet);transform:translateX(-1px);pointer-events:none}
+.compare .knob{position:absolute;top:50%;left:var(--pos,50%);transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:var(--garnet);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.25)}
+.compare .tagL,.compare .tagR{position:absolute;top:8px;font-size:.72rem;font-weight:700;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,.88);color:#3b2a24;pointer-events:none}
+.compare .tagL{left:8px}.compare .tagR{right:8px}
+.compare input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+
+/* ice simulation */
+.sim{background:var(--raised);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:10px}
+.sim canvas{width:100%;height:auto;aspect-ratio:2.4/1;display:block;max-width:100%}
+.sim-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;font-size:.86rem;color:var(--ink-soft)}
+.sim-controls label{display:flex;align-items:center;gap:10px;flex:1 1 260px;min-width:0}
+.sim-controls input[type=range]{flex:1;min-width:0;accent-color:var(--garnet)}
+.btn{border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:5px 12px;border-radius:8px;font:inherit;font-size:.84rem;font-weight:600;cursor:pointer}
+.btn:hover{border-color:var(--garnet);color:var(--garnet)}
+.sim-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.78rem;color:var(--ink-soft)}
+.sim-legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-2px}
+.readout{font-variant-numeric:tabular-nums;color:var(--ink)}
+
+/* lightbox */
+dialog.lb{border:none;padding:0;background:transparent;max-width:min(96vw,1500px);width:100%}
+dialog.lb::backdrop{background:rgba(15,12,10,.82)}
+dialog.lb .lb-inner{background:#fff;border-radius:12px;padding:12px;position:relative}
+dialog.lb img{width:100%;height:auto;max-height:84vh;object-fit:contain;display:block}
+dialog.lb button{position:absolute;top:8px;right:8px;border:none;background:#782f40;color:#fff;border-radius:8px;padding:4px 10px;font:600 .85rem var(--sans);cursor:pointer}
+dialog.lb p{margin:8px 4px 0;color:#4a4542;font-size:.85rem}
+
+footer{border-top:1px solid var(--line);margin-top:40px;padding-block:28px 40px;color:var(--ink-soft);font-size:.85rem}
+footer .wrap{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between}
+
+/* quantum feature */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:760px){.stats{grid-template-columns:1fr 1fr}}
+.stat{background:var(--info-bg);border-radius:12px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.stat-num{font-family:var(--serif);font-weight:700;font-size:1.6rem;line-height:1.1;color:var(--info-fg);font-variant-numeric:tabular-nums}
+.stat-lbl{font-size:.8rem;line-height:1.45;color:var(--ink-soft)}
+.pipe{border:1px solid var(--line);background:var(--raised);border-radius:14px;padding:16px;display:grid;gap:12px}
+.pipe-title{margin:0;font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--gold)}
+.pipe-steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,1fr);gap:8px;counter-reset:st}
+@media (max-width:760px){.pipe-steps{grid-template-columns:1fr 1fr}}
+.pipe-steps li{counter-increment:st;min-width:0;display:flex}
+.pipe-steps button{flex:1;font:inherit;font-size:.82rem;font-weight:600;line-height:1.3;text-align:left;padding:9px 10px;border-radius:10px;cursor:pointer;border:1.5px solid var(--line);background:var(--paper);color:var(--ink)}
+.pipe-steps button::before{content:counter(st);display:block;font-size:.7rem;font-weight:700;color:var(--ink-soft);margin-bottom:2px}
+.pipe-steps button.q{border-color:var(--info-fg);background:var(--info-bg);color:var(--info-fg)}
+.pipe-steps button.c{border-color:var(--line)}
+.pipe-steps button[aria-selected="true"]{box-shadow:0 0 0 2px var(--garnet) inset;border-color:var(--garnet)}
+.pipe-detail{display:flex;gap:12px;align-items:flex-start;min-height:4.8em}
+.pipe-detail p{margin:0;max-width:72ch;font-size:.95rem}
+.pipe-side{flex:none;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 9px;border-radius:999px;margin-top:3px}
+.pipe-side.q{background:var(--info-bg);color:var(--info-fg)}
+.pipe-side.c{background:var(--mute-bg);color:var(--mute-fg)}
+.pipe-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.78rem;color:var(--ink-soft)}
+.pipe-legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-2px}
+.lg-c{background:var(--paper);border:1.5px solid var(--ink-soft)}
+.lg-q{background:var(--info-bg);border:1.5px solid var(--info-fg)}
+.tp-row{align-items:start}
+.tplayer{background:var(--plate);border:1px solid var(--line);border-radius:12px;padding:10px;display:grid;gap:10px}
+.tp-frames{display:grid}
+.tp-frames img{grid-area:1/1;width:100%;height:auto;max-width:100%;opacity:0;transition:opacity .5s}
+.tp-frames img.on{opacity:1}
+@media (prefers-reduced-motion: reduce){.tp-frames img{transition:none}}
+.tp-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tplayer .btn{background:#fff;color:#3b2a24;border-color:#ddd3c8}
+.tp-ticks{display:flex;gap:6px;flex-wrap:wrap}
+.tick{font:inherit;font-size:.8rem;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid #ddd3c8;background:#fff;color:#5a524c;cursor:pointer}
+.tick.on{background:#782f40;border-color:#782f40;color:#fff}
+.tp-side{display:grid;gap:12px;min-width:0}
+.kicker{margin:4px 0 0;font-weight:700;font-size:.9rem}
+.contrib{margin:0;padding-left:1.1em;display:grid;gap:8px;font-size:.93rem;color:var(--ink-soft)}
+.contrib li::marker{color:var(--gold)}
+.qskills{display:flex;flex-wrap:wrap;gap:8px}
+.theme-head p strong{color:var(--ink)}
+</style>
+
+<nav class="nav" aria-label="Site">
+  <div class="wrap">
+    <a class="nav-name" href="index.html" style="color:var(--ink)">Kapil Chawla</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li class="opt"><a href="#themes">Research</a></li>
+      <li class="opt"><a href="index.html#publications">Publications</a></li>
+      <li class="opt"><a href="index.html#presentations">Talks</a></li>
+      <li><button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="wrap hero">
+  <div class="hero-row">
+    <img class="avatar" src="images/research/kapil.webp" alt="Portrait of Kapil Chawla" width="104" height="104">
+    <div class="hero-text">
+      <h1>Kapil Chawla, Ph.D.</h1>
+      <p class="role">Postdoctoral Research Associate, Computational &amp; Applied Mathematics</p>
+      <p class="affil">Department of Mathematics, <a href="https://www.fsu.edu" target="_blank" rel="noopener">Florida State University</a>, Tallahassee, FL</p>
+      <p class="grant">U.S. DOE project: Advanced Multi-Physics Machine Learning for Subsurface Energy Systems Across Scales (DE-SC0024703)</p>
+    </div>
+  </div>
+  <div class="chips">
+    <a class="chip" href="https://scholar.google.com/citations?user=N0KqdUQAAAAJ" target="_blank" rel="noopener">Google Scholar</a>
+    <a class="chip" href="https://github.com/kapilchawlamath" target="_blank" rel="noopener">GitHub</a>
+    <a class="chip" href="mailto:kc25bc@fsu.edu">kc25bc@fsu.edu</a>
+    <a class="chip" href="index.html">CV &amp; full profile</a>
+  </div>
+
+  <div style="margin-top:30px">
+    <p class="eyebrow">Keywords</p>
+    <div class="keywords">
+      <span class="kw">Numerical methods for PDEs</span>
+      <span class="kw">Finite element &amp; discontinuous Galerkin methods</span>
+      <span class="kw">Scientific machine learning</span>
+      <span class="kw">Data-free neural operators</span>
+      <span class="kw">Reduced-order modeling</span>
+      <span class="kw">Mesh-free / RBF approximation</span>
+      <span class="kw">Variational inequalities &amp; obstacle problems</span>
+      <span class="kw">Hybrid quantum-classical algorithms</span>
+      <span class="kw">Variational quantum linear solvers</span>
+      <span class="kw">Porous media &amp; geothermal systems</span>
+      <span class="kw">Ice-sheet dynamics</span>
+    </div>
+  </div>
+
+  <p class="statement">I design numerical methods for PDEs whose solutions are hard to resolve: jumps in material coefficients, sharp interfaces, free boundaries, and tightly coupled physics. My approach is to keep the structure of a classical discretization (finite elements, discontinuous Galerkin, proper orthogonal decomposition, multigrid) and use <strong>machine learning</strong> or <strong>quantum computing</strong> only where it does work the classical method cannot. The applications are <strong>subsurface energy</strong> (geothermal reservoirs, heterogeneous porous media) and <strong>glaciology</strong>.</p>
+</header>
+
+<section class="wrap index" id="themes" aria-label="Research themes">
+  <p class="eyebrow">Research themes</p>
+  <div class="index-grid">
+    <a class="index-card" href="#sciml">
+      <div class="thumbs"><img src="images/research/dg_3d.webp" alt=""><img src="images/research/smn_forge.webp" alt=""><img id="iceThumb" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt=""></div>
+      <div class="ic-body">
+        <span class="ic-num">Theme 1</span>
+        <span class="ic-title">Scientific machine learning for PDEs</span>
+        <ul class="ic-list">
+          <li><span>Neural operators for non-smooth PDEs</span><span class="status s-ok">Accepted, SISC</span></li>
+          <li><span>Reduced-order models for geothermal THM</span><span class="status s-info">Submitted</span></li>
+          <li><span>Ice-sheet dynamics as obstacle problems</span><span class="status s-ok">2 published</span></li>
+        </ul>
+      </div>
+    </a>
+    <a class="index-card" href="#solvers">
+      <div class="thumbs"><img src="images/research/q_circuit.webp" alt="" style="object-fit:contain;padding:6px"><img src="images/research/q_t2.webp" alt="" style="object-position:top"><img src="images/research/pam_spe10_pam.webp" alt=""></div>
+      <div class="ic-body">
+        <span class="ic-num">Theme 2</span>
+        <span class="ic-title">Quantum computing for PDE solvers</span>
+        <ul class="ic-list">
+          <li><span>Hybrid quantum-classical coarse-to-fine solver</span><span class="status s-warn">Under revision, SISC</span></li>
+          <li><span>Mesh-free models of heterogeneous media</span><span class="status s-info">Submitted</span></li>
+        </ul>
+      </div>
+    </a>
+  </div>
+</section>
+
+<main>
+<!-- ============ THEME 1 ============ -->
+<section class="wrap theme" id="sciml">
+  <div class="theme-head">
+    <p class="eyebrow">Theme 1</p>
+    <h2>Scientific machine learning for PDEs</h2>
+    <p>Neural networks that respect the mathematics of the problem. Each method trains on the residual or energy of a classical formulation (discontinuous Galerkin, POD, or an obstacle problem), so it needs little or no solution data and inherits the structure that makes the classical method reliable near jumps, interfaces, and free boundaries.</p>
+  </div>
+<div class="subtheme" id="operators">
+  <div class="sub-head">
+    <h3><span class="sub-num">1.1</span>Neural operators for non-smooth PDEs</h3>
+    <p>Most neural PDE solvers need large sets of precomputed solutions, and they smooth out jumps. I build operator networks that train on the residual of a finite element discretization, so they need no solution data and inherit the accuracy of the underlying scheme near interfaces.</p>
+  </div>
+
+  <article class="project">
+    <div class="p-head">
+      <h4>DG-FEONet: Discontinuous Galerkin Finite Element Operator Network</h4>
+      <span class="status s-ok">Accepted</span>
+      <span class="venue"><em>SIAM Journal on Scientific Computing</em>, 2026</span>
+    </div>
+    <p class="authors"><b>K. Chawla</b>, Y. Hong, J. Y. Lee, S. Lee</p>
+    <p class="pitch">A network maps the PDE input (a discontinuous coefficient or source term) to the coefficients of a discontinuous Galerkin solution. Training minimizes the residual of the symmetric interior penalty (SIPG) weak form, so no input–solution pairs are needed. The paper includes a convergence analysis.</p>
+    <p class="result"><span class="lbl">Result</span>Resolves interface jumps that continuous Galerkin and PINN-type solvers smooth over, and generalizes across random circular inclusions with varying radius and contrast.</p>
+    <figure>
+      <button class="fig-btn plate" type="button" data-cap="DG-FEONet framework: the network predicts DG coefficients, and the loss is the residual of the DG weak form."><img src="images/research/dg_schematic.webp" alt="Schematic of the DG-FEONet framework" width="1134" height="338"></button>
+      <figcaption><b>How it works.</b> Input ω → network → DG coefficients → solution through the DG basis; trained on the weak-form residual.</figcaption>
+    </figure>
+    <div class="figs-2">
+      <figure>
+        <button class="fig-btn plate" type="button" data-cap="Random circular interfaces. Left to right: discontinuous coefficient, FEM reference, DG-FEONet prediction."><img src="images/research/dg_circles.webp" alt="Coefficient field, FEM reference and DG-FEONet prediction for circular inclusions" width="1152" height="937"></button>
+        <figcaption><b>Circular inclusions.</b> Coefficient ε(x), FEM reference, DG-FEONet prediction, for two unseen parameter sets.</figcaption>
+      </figure>
+      <figure>
+        <button class="fig-btn plate" type="button" data-cap="Coefficient with two jumps (left); CG-FEONet, DG-FEONet, CG and DG finite element solutions (right). CG oversmooths the jumps while DG resolves them."><img src="images/research/dg_cgdg.webp" alt="Comparison of CG and DG solutions across coefficient jumps" width="1152" height="320"></button>
+        <figcaption><b>Why discontinuous Galerkin.</b> Across two coefficient jumps, the CG-based network oversmooths; DG-FEONet follows the DG reference.</figcaption>
+        <button class="fig-btn plate" type="button" style="margin-top:12px" data-cap="Two circular inclusions: FEM reference (left) and DG-FEONet prediction (right)."><img src="images/research/dg_3d.webp" alt="Surface plots of FEM and DG-FEONet solutions" width="1152" height="555"></button>
+        <figcaption><b>Two inclusions.</b> FEM reference (left) and DG-FEONet (right).</figcaption>
+      </figure>
+    </div>
+    <div class="links">
+      <a href="https://arxiv.org/abs/2601.03668" target="_blank" rel="noopener">arXiv</a>
+      <a href="https://github.com/kapilchawlamath/DG-FEONet" target="_blank" rel="noopener">Code</a>
+    </div>
+    <p class="talks"><b>Presented at</b> Finite Element Circus (Tufts, 2026) · SE Applied &amp; Computational Math Student Workshop (Emory, 2026) · Clemson Graduate Student Conference (2025)</p>
+  </article>
+
+  <article class="project">
+    <div class="p-head">
+      <h4>Finite Element Operator Network for obstacle problems</h4>
+      <span class="status s-mute">In preparation</span>
+    </div>
+    <p class="authors"><b>K. Chawla</b>, S. Lee, Y. Hong</p>
+    <p class="pitch">Extends the finite element operator network to variational inequalities, where the solution must stay above an obstacle and the contact set is part of the unknown. Learns the contact set without labeled solutions.</p>
+  </article>
+</div>
+<div class="subtheme" id="rom">
+  <div class="sub-head">
+    <h3><span class="sub-num">1.2</span>Reduced-order models for geothermal systems</h3>
+    <p>Coupled thermo-hydro-mechanical (THM) models track displacement, pressure, and temperature in a geothermal reservoir. With heterogeneous rock and fractures, each simulation is costly. Reduced-order models replace the many unknowns with a few coordinates; the question is how to keep accuracy when linear POD needs too many modes.</p>
+  </div>
+
+  <article class="project">
+    <div class="p-head">
+      <h4>SparseModesNet for coupled THM systems in heterogeneous porous media</h4>
+      <span class="status s-info">Submitted</span>
+      <span class="venue"><em>Computational Mechanics</em>, 2026</span>
+    </div>
+    <p class="authors"><b>K. Chawla</b>, T. Koike, S. Lee, J. Bessac</p>
+    <p class="pitch">SparseModesNet starts from a large dictionary of POD modes, learns which small subset to keep (not necessarily the highest-energy ones), and adds a neural correction to the linear POD reconstruction. This is its first use on coupled multiphysics fields.</p>
+    <p class="result"><span class="lbl">Result</span>With the same 15 reduced coordinates, the full-state relative error drops from 5.8×10⁻² (POD) to 8.3×10⁻⁵, nearly three orders of magnitude. Tested on heterogeneous, fracture-network, and 3D Utah FORGE geometries.</p>
+    <figure>
+      <button class="fig-btn plate" type="button" data-cap="SparseModesNet workflow: high-fidelity snapshots, POD candidate coordinates, sparse mode selection, linear POD term plus nonlinear correction."><img src="images/research/smn_workflow.webp" alt="SparseModesNet workflow diagram" width="1330" height="792"></button>
+      <figcaption><b>Workflow.</b> Encode with POD, select r modes, reconstruct with a linear term plus a learned nonlinear correction.</figcaption>
+    </figure>
+    <figure>
+      <button class="fig-btn plate" type="button" data-cap="Experiment 1: high-fidelity, POD, and SparseModesNet reconstructions of pressure, temperature, and displacement magnitude with r = 15 modes, and their pointwise errors."><img src="images/research/smn_recon.webp" alt="Pressure, temperature and displacement reconstructions with errors for POD and SparseModesNet" width="1345" height="1024"></button>
+      <figcaption><b>2D heterogeneous reservoir.</b> Pressure, temperature, and displacement: reference, POD, SparseModesNet, then the two error maps (log scale).</figcaption>
+    </figure>
+    <div class="figs-2">
+      <figure>
+        <button class="fig-btn plate" type="button" data-cap="Utah FORGE Stage 8 fracture geometry with injection and production locations."><img src="images/research/smn_forge.webp" alt="3D Utah FORGE fracture geometry" width="817" height="690"></button>
+        <figcaption><b>Utah FORGE.</b> 3D fracture geometry with injection and production wells.</figcaption>
+      </figure>
+      <figure>
+        <button class="fig-btn plate" type="button" data-cap="Cross-section of the 3D problem: high-fidelity solution, SparseModesNet reconstruction, and pointwise error for pressure and temperature with r = 10 modes."><img src="images/research/smn_3dslice.webp" alt="Cross-section reconstructions of pressure and temperature for the 3D problem" width="1319" height="1044"></button>
+        <figcaption><b>3D reconstruction.</b> Reference, SparseModesNet, and error on a cross-section, using 10 modes.</figcaption>
+      </figure>
+    </div>
+    <div class="links"><span>Preprint coming soon</span></div>
+    <p class="talks"><b>Presented at</b> SIAM Conference on Mathematics of Data Science (MDS26, invited minisymposium) · AMS Fall Southeastern Sectional Meeting (Kennesaw State, 2026)</p>
+  </article>
+</div>
+<div class="subtheme" id="ice">
+  <div class="sub-head">
+    <h3><span class="sub-num">1.3</span>Ice-sheet dynamics as obstacle problems</h3>
+    <p>Ph.D. work with W. Holmes and R. Temam. Ice thickness cannot be negative, and where the ice ends is not known in advance. Writing the shallow ice approximation as an obstacle problem handles both at once, and it gives an energy or residual that a neural network can minimize. I used this to predict ice thickness for real ice sheets.</p>
+  </div>
+
+  <figure>
+    <div class="sim">
+      <canvas id="iceCanvas" width="1200" height="500" aria-label="Animated one-dimensional ice sheet flowing over bedrock"></canvas>
+      <div class="sim-controls">
+        <label for="iceR">Accumulation zone <input type="range" id="iceR" min="10" max="34" value="22"> <span class="readout" id="iceRval">0.22</span></label>
+        <button class="btn" type="button" id="icePlay">Pause</button>
+        <button class="btn" type="button" id="iceReset">Restart</button>
+      </div>
+      <div class="sim-legend">
+        <span><i style="background:var(--ice);border:1px solid var(--ice-line)"></i>Ice, H &gt; 0</span>
+        <span><i style="background:var(--rock)"></i>Bedrock b(x)</span>
+        <span><i style="background:var(--garnet)"></i>Contact set, H = 0</span>
+        <span><i style="background:var(--gold)"></i>Mass balance M(x)</span>
+      </div>
+    </div>
+    <figcaption><b>Try the model problem.</b> A finite-volume solver for the 1D shallow ice equation, H<sub>t</sub> = ∂<sub>x</sub>(Γ H⁵ |∂<sub>x</sub>s|² ∂<sub>x</sub>s) + M, with the constraint H ≥ 0, running in your browser. Widen or shrink the snowfall zone and watch the margins (the free boundary) move. This illustrates the model; it is not output from the papers.</figcaption>
+  </figure>
+
+  <article class="project">
+    <div class="p-head">
+      <h4>A physics-informed neural network approach to simulating ice dynamics governed by the shallow ice approximation</h4>
+      <span class="status s-ok">Published</span>
+      <span class="venue"><em>Int. J. Numerical Analysis and Modeling</em> 23(4), 523–550, 2026</span>
+    </div>
+    <p class="authors"><b>K. Chawla</b>, W. Holmes</p>
+    <p class="pitch">Treats time-dependent ice flow as a parabolic obstacle problem and solves it with a physics-informed neural network. Captures moving free boundaries in 1D and 2D, and is applied to the Devon Ice Cap using aerogeophysical data from 2000 and 2018.</p>
+    <div class="links">
+      <a href="https://doi.org/10.4208/ijnam2026-1023" target="_blank" rel="noopener">Journal</a>
+      <a href="https://arxiv.org/abs/2504.08136" target="_blank" rel="noopener">arXiv</a>
+    </div>
+  </article>
+
+  <article class="project">
+    <div class="p-head">
+      <h4>From obstacle problems to neural insights: feed-forward neural network modeling of ice thickness</h4>
+      <span class="status s-ok">Published</span>
+      <span class="venue"><em>Int. J. Numerical Analysis and Modeling</em> 22, 1–20, 2025</span>
+    </div>
+    <p class="authors"><b>K. Chawla</b>, W. Holmes, R. Temam</p>
+    <p class="pitch">Frames the stationary ice-thickness obstacle problem as energy minimization and solves it with a feed-forward network. Tested in 1D and 2D, then applied to the Greenland ice sheet (NSIDC-0092), with pre-training on bedrock topography improving accuracy.</p>
+    <div class="links">
+      <a href="https://www.math.ualberta.ca/ijnam/Volume-22-2025/No-1-25/2025-01-01.pdf" target="_blank" rel="noopener">Journal</a>
+      <a href="https://arxiv.org/abs/2407.19529" target="_blank" rel="noopener">arXiv</a>
+    </div>
+    <p class="talks"><b>Presented at</b> ACM Seminar, Florida State University (2025)</p>
+  </article>
+</div>
+</section>
+
+<!-- ============ THEME 2 ============ -->
+<section class="wrap theme" id="solvers">
+  <div class="theme-head">
+    <p class="eyebrow">Theme 2</p>
+    <h2>Quantum computing for PDE solvers</h2>
+    <p>Quantum linear solvers promise speedups for the large sparse systems that PDEs produce, but today's devices have a few noisy qubits and return a quantum state, not numbers. My work asks a concrete question: <strong>what can a small, noisy quantum computation contribute to a real finite element solve now?</strong> I design hybrid algorithms where the quantum device handles one small, well-posed piece of a classical solver, and I measure its effect honestly, counting every shot needed to read the answer out. The test bed is subsurface flow through heterogeneous rock.</p>
+  </div>
+
+<div class="subtheme" id="quantum">
+  <div class="sub-head">
+    <h3><span class="sub-num">2.1</span>Hybrid quantum-classical coarse-to-fine solver</h3>
+  </div>
+
+  <article class="project">
+    <div class="p-head">
+      <h4>A hybrid quantum-classical coarse-to-fine finite element solver for heterogeneous Darcy flow</h4>
+      <span class="status s-warn">Under revision</span>
+      <span class="venue"><em>SIAM Journal on Scientific Computing</em>, special section on quantum numerical algorithms, 2026</span>
+    </div>
+    <p class="authors"><b>K. Chawla</b>, S. Lee, J. Valyou</p>
+    <p class="pitch">Instead of putting the whole fine-grid system on a quantum device, the quantum computer solves only the small Galerkin coarse problem with a variational method inspired by VQLS. The coarse solution is measured, reconstructed, and prolongated to the fine grid, where it warm-starts a classical algebraic-multigrid preconditioned CG solve that restores full accuracy.</p>
+
+    <div class="stats" role="list">
+      <div class="stat" role="listitem"><span class="stat-num">4,095 → 4</span><span class="stat-lbl">fine-grid unknowns handed to a 4-qubit register through a 15-unknown Galerkin coarse system</span></div>
+      <div class="stat" role="listitem"><span class="stat-num">30–35%</span><span class="stat-lbl">lower initial L² error than a zero start, from measured quantum solutions under shot and device noise</span></div>
+      <div class="stat" role="listitem"><span class="stat-num">≈89%</span><span class="stat-lbl">fewer shots in time-dependent runs by reusing circuit parameters between steps (210M → 25M per run)</span></div>
+      <div class="stat" role="listitem"><span class="stat-num">10⁻¹¹</span><span class="stat-lbl">relative error after classical correction, even when state fidelity drops to 0.61 under device noise</span></div>
+    </div>
+
+    <div class="pipe" id="pipe">
+      <p class="pipe-title">Walk through the algorithm</p>
+      <ol class="pipe-steps" role="tablist" aria-label="Algorithm steps">
+        <li><button type="button" role="tab" class="c" data-i="0">Fine FEM system</button></li>
+        <li><button type="button" role="tab" class="c" data-i="1">Galerkin coarse projection</button></li>
+        <li><button type="button" role="tab" class="q" data-i="2">Variational quantum solve</button></li>
+        <li><button type="button" role="tab" class="q" data-i="3">Measure &amp; reconstruct</button></li>
+        <li><button type="button" role="tab" class="c" data-i="4">Prolongate &amp; lift</button></li>
+        <li><button type="button" role="tab" class="c" data-i="5">AMG-PCG correction</button></li>
+      </ol>
+      <div class="pipe-detail" role="tabpanel" aria-live="polite">
+        <span class="pipe-side" id="pipeSide">Quantum</span>
+        <p id="pipeText"></p>
+      </div>
+      <div class="pipe-legend"><span><i class="lg-c"></i>Classical</span><span><i class="lg-q"></i>Quantum (simulated with Qiskit Aer)</span></div>
+    </div>
+
+    <div class="figs-2 tp-row">
+      <figure>
+        <div class="tplayer" id="tplayer">
+          <div class="tp-frames">
+            <img src="images/research/q_t0.webp" alt="Pressure at t = 0.05: quantum coarse, corrected, reference" width="640" height="890" class="on">
+            <img src="images/research/q_t1.webp" alt="Pressure at t = 0.5: quantum coarse, corrected, reference" width="640" height="890">
+            <img src="images/research/q_t2.webp" alt="Pressure at t = 1: quantum coarse, corrected, reference" width="640" height="890">
+          </div>
+          <div class="tp-controls">
+            <button type="button" class="btn" id="tpPlay">Pause</button>
+            <div class="tp-ticks" role="group" aria-label="Time">
+              <button type="button" class="tick on" data-k="0">t = 0.05</button>
+              <button type="button" class="tick" data-k="1">t = 0.5</button>
+              <button type="button" class="tick" data-k="2">t = 1</button>
+            </div>
+          </div>
+        </div>
+        <figcaption><b>Time-dependent flow on an SPE10 slice</b>, under device-modeled noise with parameter reuse. Top: the measured quantum coarse solution. Middle: after classical correction. Bottom: reference.</figcaption>
+      </figure>
+      <div class="tp-side">
+        <p class="result"><span class="lbl">Why it works</span>The coarse quantum answer only needs to capture the large-scale pressure trend; the classical correction supplies the fine detail. Galerkin orthogonality splits the initial error into coarse-space error and error from the quantum solve and readout, so each source can be measured.</p>
+        <p class="kicker">What the paper establishes</p>
+        <ul class="contrib">
+          <li>An end-to-end pipeline from a finite element system to a quantum circuit and back to explicit solution coefficients, including tomography and rescaling.</li>
+          <li>A fair comparison of measured quantum, zero, and exact Galerkin starting guesses, using initial L² and energy errors and solver iterations.</li>
+          <li>Steady and time-dependent heterogeneous Darcy flow under finite sampling, synthetic noise, and noise calibrated from an IBM device model.</li>
+          <li>Parameter reuse across time steps: 56–57 of 60 coarse solves needed no further optimization.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="figs-2">
+      <figure>
+        <button class="fig-btn plate" type="button" data-cap="Steady problem under device-modeled noise: permeability, reference pressure, coarse quantum pressure, lifted initial pressure, corrected pressure, and a slice at y = 0.5."><img src="images/research/q_fields.webp" alt="Permeability and pressure fields for the hybrid solver" width="1152" height="817"></button>
+        <figcaption><b>Steady Darcy flow.</b> Permeability, reference, quantum coarse, lifted, and corrected pressures, with a slice at y = 0.5.</figcaption>
+      </figure>
+      <figure>
+        <button class="fig-btn plate" type="button" data-cap="Four-qubit hardware-efficient trial state: layers of Ry rotations followed by a nearest-neighbor CNOT chain. Three layers are shown; the experiments use six layers with 24 parameters."><img src="images/research/q_circuit.webp" alt="Four-qubit variational circuit" width="1152" height="323"></button>
+        <figcaption><b>Ansatz.</b> Four-qubit hardware-efficient circuit (three layers shown; experiments use six, with 24 parameters).</figcaption>
+        <button class="fig-btn plate" type="button" style="margin-top:12px" data-cap="Hybrid workflow: fine-grid FEM system, Galerkin coarse projection, variational quantum solve, measured coarse coefficients, lifted initial pressure, AMG-PCG correction."><img src="images/research/q_workflow.webp" alt="Hybrid quantum-classical coarse-to-fine workflow" width="1117" height="708"></button>
+        <figcaption><b>Workflow</b> as drawn in the paper.</figcaption>
+      </figure>
+    </div>
+
+    <p class="result"><span class="lbl">Next</span>Larger coarse systems, other coarse spaces, cheaper readout than full tomography, runs on quantum hardware, and other symmetric positive definite systems from multiphysics models.</p>
+    <div class="qskills">
+      <span class="kw">Variational quantum linear solvers</span><span class="kw">SPSA optimization</span><span class="kw">Quantum state tomography</span><span class="kw">Noise modeling</span><span class="kw">Qiskit / Qiskit Aer</span><span class="kw">Algebraic multigrid</span>
+    </div>
+    <div class="links"><span>Preprint coming soon</span></div>
+  </article>
+</div>
+
+<div class="subtheme" id="meshfree">
+  <div class="sub-head">
+    <h3><span class="sub-num">2.2</span>Mesh-free models of heterogeneous media</h3>
+    <p>The solvers above all need permeability on whatever mesh they use, but the data usually comes as one value per cell of a particular grid. Moving it to a new mesh blurs sharp layers. I build continuous, closed-form surrogates that keep the interfaces and can be evaluated on any mesh, from a coarse quantum-sized grid to a fine one.</p>
+  </div>
+
+  <article class="project">
+    <div class="p-head">
+      <h4>PAM: a parallel and adaptive mesh-free method for discontinuous coefficient fields</h4>
+      <span class="status s-info">Submitted</span>
+      <span class="venue"><em>Journal of Computational Physics</em>, 2026</span>
+    </div>
+    <p class="authors"><b>K. Chawla</b>, S. Lee, Y. Shin</p>
+    <p class="pitch">PAM writes the permeability as a sum of Shepard-normalized radial basis functions. Sparse regression picks the basis functions that matter, and residual-driven refinement adds centers only where the field jumps. Subdomains are fitted in parallel. The paper proves the normalized RBF approximation reaches arbitrarily small L¹ error for step functions.</p>
+    <p class="result"><span class="lbl">Result</span>Three adaptive rounds cut the L² error from 1.55×10⁻³ to 5.6×10⁻⁵. The same surrogate drives Darcy solves on refined, irregular, and perforated meshes, including the SPE10 benchmark.</p>
+    <figure>
+      <div class="compare" id="spe10" style="--pos:50%">
+        <img src="images/research/pam_spe10_pam.webp" alt="PAM continuous reconstruction of SPE10 permeability" width="1600" height="736">
+        <img class="top" src="images/research/pam_spe10_original.webp" alt="Original SPE10 cellwise permeability" width="1600" height="736">
+        <div class="bar"></div><div class="knob" aria-hidden="true">⇔</div>
+        <span class="tagL">SPE10 data (cellwise)</span><span class="tagR">PAM reconstruction</span>
+        <input type="range" id="spe10Range" min="0" max="100" value="50" aria-label="Slide to compare SPE10 data with the PAM reconstruction">
+      </div>
+      <figcaption><b>Drag to compare.</b> SPE10 permeability on the 60×220 grid (log₁₀ scale): the original cellwise data and PAM's continuous closed-form reconstruction.</figcaption>
+    </figure>
+    <figure>
+      <button class="fig-btn plate" type="button" data-cap="PAM overview: piecewise-constant permeability is split into subdomains, fitted locally with adaptive RBFs, and assembled into a global mesh-free surrogate usable on arbitrary meshes and geometries."><img src="images/research/pam_overview.webp" alt="Overview of the PAM framework" width="1230" height="234"></button>
+      <figcaption><b>Pipeline.</b> Cell data → parallel subdomain fits → one global surrogate K*(x) for any mesh or geometry.</figcaption>
+    </figure>
+    <div class="figs-2">
+      <figure>
+        <button class="fig-btn plate" type="button" data-cap="Adaptive refinement: recovered permeability (top) and RBF center locations (bottom) at rounds 0, 3, and 5; newly added centers are highlighted."><img src="images/research/pam_adaptive.webp" alt="Adaptive refinement rounds of the recovered permeability and RBF centers" width="1194" height="733"></button>
+        <figcaption><b>Adaptive refinement.</b> Rounds 0, 3, 5: new RBF centers are added only where the residual is large.</figcaption>
+      </figure>
+      <figure>
+        <button class="fig-btn plate" type="button" data-cap="Rectangular domain with circular holes: computational mesh and pressure computed using the PAM surrogate K*(x)."><img src="images/research/pam_geom3.webp" alt="Mesh with holes and the resulting pressure field" width="1322" height="351"></button>
+        <figcaption><b>New geometry, no re-projection.</b> A domain with holes, meshed independently, solved with the same K*(x).</figcaption>
+      </figure>
+    </div>
+    <div class="links"><a href="https://arxiv.org/abs/2605.16564" target="_blank" rel="noopener">arXiv</a></div>
+  </article>
+</div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year">2026</span> Kapil Chawla · Department of Mathematics, Florida State University</span>
+    <span>Supported by the U.S. Department of Energy, Award DE-SC0024703</span>
+  </div>
+</footer>
+
+<dialog class="lb" id="lightbox" aria-label="Enlarged figure">
+  <div class="lb-inner">
+    <button type="button" id="lbClose">Close</button>
+    <img id="lbImg" alt="">
+    <p id="lbCap"></p>
+  </div>
+</dialog>
+
+<script>
+(function(){
+  var root=document.documentElement;
+  // theme toggle (shared key with the home page)
+  try{var saved=localStorage.getItem('theme'); if(saved==='dark'||saved==='light') root.setAttribute('data-theme',saved);}catch(e){}
+  var tt=document.getElementById('themeToggle');
+  tt.addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+    var next=cur==='dark'?'light':'dark'; root.setAttribute('data-theme',next);
+    try{localStorage.setItem('theme',next);}catch(e){}
+    drawIce();
+  });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){drawIce();});
+  document.getElementById('year').textContent=new Date().getFullYear();
+
+  // lightbox
+  var lb=document.getElementById('lightbox'), lbImg=document.getElementById('lbImg'), lbCap=document.getElementById('lbCap');
+  document.querySelectorAll('.fig-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      var im=b.querySelector('img'); lbImg.src=im.src; lbImg.alt=im.alt; lbCap.textContent=b.getAttribute('data-cap')||'';
+      if(lb.showModal) lb.showModal();
+    });
+  });
+  document.getElementById('lbClose').addEventListener('click',function(){lb.close();});
+  lb.addEventListener('click',function(e){ if(e.target===lb) lb.close(); });
+
+
+  // quantum pipeline stepper
+  var steps=[
+    ['c','Assemble the linear finite element system for steady Darcy flow on the fine mesh (8,192 elements, 4,095 unknowns) with heterogeneous permeability.'],
+    ['c','Project it onto a coarse mesh by Galerkin projection: 15 unknowns, padded with one auxiliary unknown to 16 = 2⁴, so it fits on four qubits.'],
+    ['q','A parameterized circuit prepares a trial state. Its parameters are tuned with SPSA to minimize an energy objective estimated from measurements, a method inspired by the variational quantum linear solver (VQLS).'],
+    ['q','Quantum state tomography over 81 Pauli bases recovers the state; classical post-processing rescales it into an explicit vector of coarse coefficients.'],
+    ['c','Prolongate the coarse coefficients to the fine mesh and add the boundary lifting. This gives an initial pressure that already carries the large-scale flow pattern.'],
+    ['c','Run conjugate gradients with a smoothed-aggregation algebraic multigrid preconditioner from that starting guess. The correction removes the coarse and quantum errors down to solver tolerance.']
+  ];
+  var pbtn=document.querySelectorAll('.pipe-steps button'), pside=document.getElementById('pipeSide'), ptext=document.getElementById('pipeText');
+  function pick(i){ pbtn.forEach(function(b,k){ b.setAttribute('aria-selected', k===i?'true':'false'); });
+    pside.className='pipe-side '+steps[i][0]; pside.textContent=steps[i][0]==='q'?'Quantum':'Classical'; ptext.textContent=steps[i][1]; }
+  pbtn.forEach(function(b){ b.addEventListener('click',function(){ pick(+b.getAttribute('data-i')); }); });
+  pick(2);
+
+  // time player
+  var tframes=document.querySelectorAll('.tp-frames img'), tticks=document.querySelectorAll('.tick'), tk=0, tplay=!matchMedia('(prefers-reduced-motion: reduce)').matches, tPlayBtn=document.getElementById('tpPlay');
+  function tshow(k){ tk=k; tframes.forEach(function(f,i){ f.classList.toggle('on',i===k); }); tticks.forEach(function(t,i){ t.classList.toggle('on',i===k); }); }
+  tticks.forEach(function(t){ t.addEventListener('click',function(){ tplay=false; tPlayBtn.textContent='Play'; tshow(+t.getAttribute('data-k')); }); });
+  tPlayBtn.textContent=tplay?'Pause':'Play';
+  tPlayBtn.addEventListener('click',function(){ tplay=!tplay; tPlayBtn.textContent=tplay?'Pause':'Play'; });
+  setInterval(function(){ if(tplay) tshow((tk+1)%3); },1800);
+
+  // before/after slider
+  var cmp=document.getElementById('spe10'), rng=document.getElementById('spe10Range');
+  rng.addEventListener('input',function(){ cmp.style.setProperty('--pos',rng.value+'%'); });
+
+  // ---------- 1D shallow ice obstacle problem ----------
+  var N=181, dx=1/(N-1), G=40;
+  var x=new Float64Array(N), b=new Float64Array(N), H=new Float64Array(N), M=new Float64Array(N), q=new Float64Array(N+1);
+  for(var i=0;i<N;i++){ x[i]=i*dx;
+    b[i]=0.05+0.04*Math.sin(5*Math.PI*x[i])+0.16*Math.exp(-Math.pow((x[i]-0.66)/0.05,2))+0.10*Math.exp(-Math.pow((x[i]-0.25)/0.07,2)); }
+  var R=0.22, playing=true, t=0;
+  function setM(){ for(var i=0;i<N;i++){ var z=(x[i]-0.45)/R; M[i]=Math.max(-1.2,0.8*(1-z*z)); } }
+  function step(tmax){
+    var tt=0; setM();
+    while(tt<tmax){
+      var Dmax=1e-9;
+      for(var i=0;i<N-1;i++){
+        var Hm=0.5*(H[i]+H[i+1]), sx=((H[i+1]+b[i+1])-(H[i]+b[i]))/dx, D=G*Math.pow(Hm,5)*sx*sx;
+        if(D>Dmax)Dmax=D; q[i+1]=-D*sx;
+      }
+      var dt=Math.min(0.24*dx*dx/Dmax, tmax-tt, 0.002);
+      for(var j=0;j<N;j++){
+        var qi=j>0?q[j]:0, qo=j<N-1?q[j+1]:0;
+        H[j]=Math.max(0,H[j]-dt*(qo-qi)/dx+dt*M[j]);  // projection onto the constraint H >= 0
+      }
+      H[0]=0; H[N-1]=0; tt+=dt;
+    }
+    t+=tmax;
+  }
+  var cv=document.getElementById('iceCanvas'), ctx=cv.getContext('2d');
+  function tok(n){ return getComputedStyle(root).getPropertyValue(n).trim(); }
+  function drawIce(){
+    var W=cv.width, Hc=cv.height, padL=20, padR=20, top=24, base=Hc-70;
+    var ymax=0.9, sx=function(v){return padL+v*(W-padL-padR);}, sy=function(v){return base-(v/ymax)*(base-top);};
+    ctx.clearRect(0,0,W,Hc);
+    // ice
+    ctx.beginPath(); ctx.moveTo(sx(x[0]),sy(b[0]));
+    for(var i=0;i<N;i++) ctx.lineTo(sx(x[i]),sy(b[i]+H[i]));
+    for(var k=N-1;k>=0;k--) ctx.lineTo(sx(x[k]),sy(b[k]));
+    ctx.closePath(); ctx.fillStyle=tok('--ice'); ctx.fill();
+    ctx.beginPath(); var on=false;
+    for(var i2=0;i2<N;i2++){ if(H[i2]>1e-4){ if(!on){ctx.moveTo(sx(x[i2]),sy(b[i2]+H[i2])); on=true;} else ctx.lineTo(sx(x[i2]),sy(b[i2]+H[i2])); } else on=false; }
+    ctx.strokeStyle=tok('--ice-line'); ctx.lineWidth=3; ctx.stroke();
+    // bedrock
+    ctx.beginPath(); ctx.moveTo(sx(0),base+2);
+    for(var i3=0;i3<N;i3++) ctx.lineTo(sx(x[i3]),sy(b[i3]));
+    ctx.lineTo(sx(1),base+2); ctx.closePath(); ctx.fillStyle=tok('--rock'); ctx.fill();
+    ctx.beginPath(); for(var i4=0;i4<N;i4++){ if(i4===0) ctx.moveTo(sx(x[i4]),sy(b[i4])); else ctx.lineTo(sx(x[i4]),sy(b[i4])); }
+    ctx.strokeStyle=tok('--rock-line'); ctx.lineWidth=1.5; ctx.stroke();
+    // contact set
+    ctx.strokeStyle=tok('--garnet'); ctx.lineWidth=5; ctx.lineCap='round';
+    var s0=-1;
+    for(var i5=0;i5<=N;i5++){
+      var c=i5<N && H[i5]<=1e-4;
+      if(c && s0<0) s0=i5;
+      if(!c && s0>=0){ ctx.beginPath(); ctx.moveTo(sx(x[s0]),sy(b[s0])+1); for(var j=s0;j<i5;j++) ctx.lineTo(sx(x[j]),sy(b[j])+1); ctx.stroke(); s0=-1; }
+    }
+    ctx.lineCap='butt';
+    // mass balance strip
+    var mb0=Hc-34, mbs=24;
+    ctx.strokeStyle=tok('--line'); ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(sx(0),mb0); ctx.lineTo(sx(1),mb0); ctx.stroke();
+    ctx.beginPath(); for(var i6=0;i6<N;i6++){ var yy=mb0-M[i6]/0.8*mbs; if(i6===0) ctx.moveTo(sx(x[i6]),yy); else ctx.lineTo(sx(x[i6]),yy); }
+    ctx.strokeStyle=tok('--gold'); ctx.lineWidth=2.5; ctx.stroke();
+    ctx.fillStyle=tok('--ink-soft'); ctx.font='600 22px Inter, system-ui, sans-serif';
+    ctx.fillText('M(x) > 0: snowfall', sx(0.45)-90, mb0+28);
+    ctx.textAlign='right'; ctx.fillText('t = '+t.toFixed(2), W-padR, top+4); ctx.textAlign='left';
+  }
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function spinUp(){ for(var k=0;k<400;k++) step(0.004); }
+  function frame(){ if(playing){ step(0.004); drawIce(); } requestAnimationFrame(frame); }
+  setM();
+  if(reduce){ playing=false; spinUp(); document.getElementById('icePlay').textContent='Play'; }
+  else { for(var k=0;k<30;k++) step(0.004); }  // start with a small cap so the first frame is not empty
+  drawIce(); requestAnimationFrame(frame);
+  // thumbnail for the index card
+  (function(){ var tmp=document.createElement('canvas'); tmp.width=480; tmp.height=300;
+    var sH=H.slice(), st=t; spinUp(); drawIce(); var tc=tmp.getContext('2d'); tc.fillStyle='#fff'; tc.fillRect(0,0,480,300);
+    tc.drawImage(cv,0,0,cv.width,cv.height-60,0,40,480,(cv.height-60)*480/cv.width);
+    try{ document.getElementById('iceThumb').src=tmp.toDataURL('image/png'); }catch(e){}
+    if(!reduce){ H.set(sH); t=st; drawIce(); } })();
+
+  var rIn=document.getElementById('iceR'), rOut=document.getElementById('iceRval');
+  rIn.addEventListener('input',function(){ R=rIn.value/100; rOut.textContent=R.toFixed(2); setM(); if(!playing){ for(var k=0;k<150;k++) step(0.004); } drawIce(); });
+  document.getElementById('icePlay').addEventListener('click',function(e){ playing=!playing; e.target.textContent=playing?'Pause':'Play'; });
+  document.getElementById('iceReset').addEventListener('click',function(){ H.fill(0); t=0; if(!playing){ for(var k=0;k<400;k++) step(0.004);} drawIce(); });
+})();
+</script>
+
+</body>
+</html>
